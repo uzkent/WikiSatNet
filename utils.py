@@ -33,10 +33,10 @@ def get_transforms():
     return transform_train, transform_test
 
 # Pick from the datasets available and the hundreds of models we have lying around depending on the requirements.
-def get_dataset(root='data/'):
+def get_dataset(train_csv, val_csv):
     transform_train, transform_test = get_transforms()
-    trainset = CustomDatasetFromImages(root+'/wikipedia/train.csv', transform_train)
-    testset = CustomDatasetFromImages(root+'/wikipedia/val.csv', transform_test)
+    trainset = CustomDatasetFromImages(train_csv, transform_train)
+    testset = CustomDatasetFromImages(val_csv, transform_test)
 
     return trainset, testset
 
@@ -48,7 +48,7 @@ def set_parameter_requires_grad(model, feature_extracting):
 
 def get_model():
 
-    rnet = torchmodels.resnet34(pretrained=True)
+    rnet = torchmodels.DenseNet121(pretrained=True)
     set_parameter_requires_grad(rnet, False)
     num_ftrs = rnet.fc.in_features
     rnet.fc = torch.nn.Linear(num_ftrs, 300)

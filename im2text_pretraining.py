@@ -20,6 +20,8 @@ parser.add_argument('--lr', type=float, default=1e-4, help='learning rate')
 parser.add_argument('--wd', type=float, default=0.0, help='weight decay')
 parser.add_argument('--data_dir', default='data/', help='data directory')
 parser.add_argument('--cv_dir', default='cv/tmp/', help='checkpoint directory (models and logs are saved here)')
+parser.add_argument('--train_csv', default='cv/tmp/', help='train csv directory')
+parser.add_argument('--val_csv', default='cv/tmp/', help='validation csv directory')
 parser.add_argument('--batch_size', type=int, default=256, help='batch size')
 parser.add_argument('--epoch_step', type=int, default=10000, help='epochs after which lr is decayed')
 parser.add_argument('--max_epochs', type=int, default=10000, help='total epochs to run')
@@ -94,7 +96,7 @@ def test(epoch):
     }
     torch.save(state, args.cv_dir+'/ckpt_E_%d'%(epoch))
 #--------------------------------------------------------------------------------------------------------#
-trainset, testset = utils.get_dataset(args.data_dir)
+trainset, testset = utils.get_dataset(args.train_csv, args.val_csv)
 trainloader = torchdata.DataLoader(trainset, batch_size=args.batch_size, shuffle=True, num_workers=16)
 testloader = torchdata.DataLoader(testset, batch_size=args.batch_size, shuffle=False, num_workers=4)
 rnet = utils.get_model()
