@@ -27,7 +27,12 @@ If we initialize the weights by pre-training on ImageNet, the training step take
 At the end of training for 2 epochs, we can see the cosine loss going down from ~1 to ~0.35. We save the checkpoints and perform transfer learning experiments.
 
 ## Transfer Learning on the functional Map of the World (fMoW) Dataset
-As a downstream task, we use the [fMoW](https://github.com/fMoW/dataset) dataset. It includes about **350k** training images, together with **50k** validation and test images. We pre-process the articles using the guidelines in the repository of the dataset. The authors of the fMoW dataset achieves 67.1 classification accuracy using the temporal views using the DenseNet121 model pre-trained on ImageNet. On the other hand, we achieve 71.5 classification accuracy by using the model pre-trained on WikiSatNet using image to text matching. To perform transfer learning on the fMoW dataset, you can use the following commands:
+As a downstream task, we use the [fMoW](https://github.com/fMoW/dataset) dataset. It includes about **350k** training images, together with **50k** validation and test images. We pre-process the articles using the guidelines in the repository of the dataset. Similarly to the pre-training step, we form a csv file in the following format:
+```
+    Class Label, Image Location
 ```
 
+The authors of the fMoW dataset achieves 67.1 classification accuracy using the temporal views using the DenseNet121 model pre-trained on ImageNet. On the other hand, we achieve 71.5 classification accuracy by using the model pre-trained on WikiSatNet using image to text matching. To perform transfer learning on the fMoW dataset, you can use the following commands:
+```
+  python transfer_learning.py --lr 1e-4 --cv_dir {path} --batch_size 128
 ```
