@@ -16,8 +16,7 @@ cudnn.benchmark = True
 
 import argparse
 parser = argparse.ArgumentParser(description='Wikipedia_Pretraining')
-parser.add_argument('--lr', type=float, default=1e-3, help='learning rate')
-parser.add_argument('--beta', type=float, default=1e-1, help='entropy multiplier')
+parser.add_argument('--lr', type=float, default=1e-4, help='learning rate')
 parser.add_argument('--wd', type=float, default=0.0, help='weight decay')
 parser.add_argument('--data_dir', default='data/', help='data directory')
 parser.add_argument('--cv_dir', default='cv/tmp/', help='checkpoint directory (models and logs are saved here)')
@@ -101,7 +100,6 @@ testloader = torchdata.DataLoader(testset, batch_size=args.batch_size, shuffle=F
 rnet = utils.get_model()
 rnet.cuda()
 
-# Get the image size to train the CNN on - low resolution or high resolution
 start_epoch = 0
 counter = 0
 criterion = nn.CosineEmbeddingLoss()

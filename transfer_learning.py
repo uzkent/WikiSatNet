@@ -1,18 +1,3 @@
-"""
-This function pretrains the high and low resolution classifiers.
-How to Run on the CIFAR10 and CIFAR100 Datasets:
-    python classifer_training.py --model R32_C10, R32_C100
-       --lr 1e-1
-       --cv_dir checkpoint directory
-       --batch_size 64
-       --wd 5e-4
-How to Run on the fMoW Dataset(Uses ImageNet pretrained model):
-    python classifier_training.py --model R34_fMoW
-       --lr 1e-1
-       --cv_dir checkpoint directory
-       --batch_size 64
-       --wd 5e-4
-"""
 import os
 from tensorboard_logger import configure, log_value
 import torch
