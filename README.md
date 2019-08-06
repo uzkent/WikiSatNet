@@ -15,3 +15,13 @@ After processing articles using Doc2Vec, we form a csv file for both **training*
     Embedding Location, Image Location, Size of the Image
     directory, directory, integer
 ```
+Our dataset consists of 800k 1000x1000 pixels images. Additionally, we perform data augmentation by cropping the central 250x250, 500x500, 750x750, and 1000x1000 pixels areas resulting in 3200k images. Finally, we save the csv files into the **data** directory.
+
+## Training
+To train the CNN, we should use the following command:
+```
+    python im2text_matching.py --lr 1e-4 --cv_dir {path} --batch_size 128
+```
+If we initialize the weights by pre-training on ImageNet, the training step takes only 2 epochs. However, initializing weights **randomly** increases the number of epochs to 15. Our current code uses the model pre-trained on **ImageNet**.
+
+At the end of training for 2 epochs, we can see the cosine loss going down from ~1 to ~0.35. We save the checkpoints and perform transfer learning experiments.
