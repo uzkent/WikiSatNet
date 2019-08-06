@@ -47,10 +47,9 @@ def set_parameter_requires_grad(model, feature_extracting):
             param.requires_grad = False
 
 def get_model():
+    dnet = torchmodels.densenet161(pretrained=True)
+    set_parameter_requires_grad(dnet, False)
+    num_ftrs = dnet.classifier.in_features
+    dnet.classifier = torch.nn.Linear(num_ftrs, 300)
 
-    rnet = torchmodels.DenseNet121(pretrained=True)
-    set_parameter_requires_grad(rnet, False)
-    num_ftrs = rnet.fc.in_features
-    rnet.fc = torch.nn.Linear(num_ftrs, 300)
-
-    return rnet
+    return dnet
