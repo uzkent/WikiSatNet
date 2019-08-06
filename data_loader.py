@@ -36,10 +36,9 @@ class CustomDatasetFromImages(Dataset):
         single_image_name = self.image_arr[index]
         single_crop_size = int(self.crop_arr[index])
         single_textual_embedding_name = self.textual_arr[index]
-
         # Load image
-        img_as_img = Image.open(single_image_name).convert('RGB').crop((self.img_center-single_crop_size/2., self.img_center-single_crop_size/2., self.img_center+single_crop_size/2., self.img_center+single_crop_size/2.))
-
+        img_as_img = Image.open(single_image_name).convert('RGB').crop((self.img_center-single_crop_size/2.,
+                    self.img_center-single_crop_size/2., self.img_center+single_crop_size/2., self.img_center+single_crop_size/2.))
         # Load the Textual Embeddings
         textual_embedding_as_tensor = np.load(single_textual_embedding_name).reshape((self.embedding_size))
         img_as_tensor = self.transforms(img_as_img)
