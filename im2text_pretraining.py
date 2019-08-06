@@ -31,10 +31,10 @@ if not os.path.exists(args.cv_dir):
     os.system('mkdir ' + args.cv_dir)
 utils.save_args(__file__, args)
 
-def train(epoch):
+def train(epoch, counter):
 
     rnet.train()
-    matches, losses = [], []
+    losses = []
     for batch_idx, (inputs, targets) in tqdm.tqdm(enumerate(trainloader), total=len(trainloader)):
 
         inputs, targets = Variable(inputs), Variable(targets).cuda(async=True)
@@ -108,7 +108,7 @@ criterion = nn.CosineEmbeddingLoss()
 optimizer = optim.Adam(rnet.parameters(), lr=args.lr)
 configure(args.cv_dir+'/log', flush_secs=5)
 for epoch in range(start_epoch, start_epoch+args.max_epochs+1):
-    train(epoch)
+    train(epoch, counter)
     if epoch % 1 == 0:
         test(epoch)
     lr_scheduler.step()
