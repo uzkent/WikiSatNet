@@ -31,8 +31,11 @@ As a downstream task, we use the [fMoW](https://github.com/fMoW/dataset) dataset
 ```
     Class Label, Image Location
 ```
+Once we created the csv file for training and validation steps, we save it into the *data* directory.
 
 The authors of the fMoW dataset achieves 67.1 classification accuracy using the temporal views using the DenseNet121 model pre-trained on ImageNet. On the other hand, we achieve 71.5 classification accuracy by using the model pre-trained on WikiSatNet using image to text matching. To perform transfer learning on the fMoW dataset, you can use the following commands:
 ```
   python transfer_learning.py --lr 1e-4 --cv_dir {path} --batch_size 128
 ```
+
+More details to be posted soon.
