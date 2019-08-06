@@ -20,7 +20,7 @@ Our dataset consists of 800k 1000x1000 pixels images. Additionally, we perform d
 ## Training
 To train the CNN, we should use the following command:
 ```
-    python im2text_matching.py --lr 1e-4 --cv_dir {path} --batch_size 128
+    python im2text_matching.py --lr 1e-4 --cv_dir {path} --batch_size 128 --train_csv {path} --val_csv {path}
 ```
 If we initialize the weights by pre-training on ImageNet, the training step takes only 2 epochs. However, initializing weights **randomly** increases the number of epochs to 15. Our current code uses the model pre-trained on **ImageNet**.
 
@@ -33,9 +33,9 @@ As a downstream task, we use the [fMoW](https://github.com/fMoW/dataset) dataset
 ```
 Once we created the csv file for training and validation steps, we save it into the *data* directory.
 
-The authors of the fMoW dataset achieves **67.1** classification accuracy using the temporal views with the DenseNet121 model pre-trained on ImageNet. On the other hand, we achieve **71.5** classification accuracy by using the model pre-trained on WikiSatNet with image to text matching. To perform transfer learning on the fMoW dataset, you can use the following commands:
+Using DenseNet121 model pre-trained on ImageNet we achieve **68.7** classification accuracy on the temporal views. On the other hand, we achieve **73.1** classification accuracy by using the model pre-trained on WikiSatNet with image to text matching. To perform transfer learning on the fMoW dataset, you can use the following commands:
 ```
-  python transfer_learning.py --lr 1e-4 --cv_dir {path} --batch_size 128 --load {path_to_checkpoints}
+  python transfer_learning.py --lr 1e-4 --cv_dir {path} --batch_size 128 --load {path_to_checkpoints} --train_csv {path} --val_csv {path}
 ```
 
 More details to be posted soon.
