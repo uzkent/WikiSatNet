@@ -1,18 +1,3 @@
-"""
-This function pretrains the high and low resolution classifiers.
-How to Run on the CIFAR10 and CIFAR100 Datasets:
-    python classifer_training.py --model R32_C10, R32_C100
-       --lr 1e-1
-       --cv_dir checkpoint directory
-       --batch_size 64
-       --wd 5e-4
-How to Run on the fMoW Dataset(Uses ImageNet pretrained model):
-    python classifier_training.py --model R34_fMoW
-       --lr 1e-1
-       --cv_dir checkpoint directory
-       --batch_size 64
-       --wd 5e-4
-"""
 import os
 from tensorboard_logger import configure, log_value
 import torch
@@ -62,24 +47,25 @@ def train(epoch):
 
         loss = criterion(preds, targets, torch.ones((inputs.size(0))).cuda())
         if batch_idx % 50 == 0:
-            print(batch_idx, loss)
+            log_value('train_loss_iteration', loss, counter)
 
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
         losses.append(loss.cpu())
+        counter += 1
 
     loss = torch.stack(losses).mean()
     log_str = 'E: %d | L: %.3f'%(epoch, loss)
     print log_str
 
-    log_value('train_loss', loss, epoch)
+    log_value('train_loss_epoch', loss, epoch)
 
 def test(epoch):
 
     rnet.eval()
-    matches = []
+    losses = []
     for batch_idx, (inputs, targets) in tqdm.tqdm(enumerate(testloader), total=len(testloader)):
 
         inputs, targets = Variable(inputs, volatile=True), Variable(targets).cuda(async=True)
@@ -92,13 +78,13 @@ def test(epoch):
 
         loss = criterion(preds, targets, torch.ones((inputs.size(0))).cuda())
 
-        matches.append(loss.cpu())
+        losses.append(loss.cpu())
 
-    accuracy = torch.cat(matches, 0).float().mean()
-    log_str = 'TS: %d | A: %.3f'%(epoch, accuracy)
+    loss = torch.stack(losses).mean()
+    log_str = 'TS: %d | L: %.3f'%(epoch, loss)
     print log_str
 
-    log_value('train_accuracy', accuracy, epoch)
+    log_value('test_loss', loss, epoch)
 
     # save the model parameters
     rnet_state_dict = rnet.module.state_dict() if args.parallel else rnet.state_dict()
@@ -106,10 +92,8 @@ def test(epoch):
     state = {
       'state_dict': rnet_state_dict,
       'epoch': epoch,
-      'acc': accuracy
     }
-    torch.save(state, args.cv_dir+'/ckpt_E_%d_A_%.3f'%(epoch, accuracy))
-
+    torch.save(state, args.cv_dir+'/ckpt_E_%d'%(epoch))
 #--------------------------------------------------------------------------------------------------------#
 trainset, testset = utils.get_dataset(args.data_dir)
 trainloader = torchdata.DataLoader(trainset, batch_size=args.batch_size, shuffle=True, num_workers=16)
@@ -119,6 +103,7 @@ rnet.cuda()
 
 # Get the image size to train the CNN on - low resolution or high resolution
 start_epoch = 0
+counter = 0
 criterion = nn.CosineEmbeddingLoss()
 optimizer = optim.Adam(rnet.parameters(), lr=args.lr)
 configure(args.cv_dir+'/log', flush_secs=5)
