@@ -40,4 +40,13 @@ To perform transfer learning on the fMoW dataset, you can use the following comm
   python transfer_learning.py --lr 1e-4 --cv_dir {path} --batch_size 128 --load {path_to_checkpoints} --train_csv {path} --val_csv {path}
 ```
 
+To cite our paper:
+```
+@article{uzkent2019learning,
+  title={Learning to Interpret Satellite Images in Global Scale Using Wikipedia},
+  author={Uzkent, Burak and Sheehan, Evan and Meng, Chenlin and Tang, Zhongyi and Burke, Marshall and Lobell, David and Ermon, Stefano},
+  journal={arXiv preprint arXiv:1905.02506},
+  year={2019}
+}
+```
 More details to be posted soon.
