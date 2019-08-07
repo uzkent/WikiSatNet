@@ -35,7 +35,7 @@ utils.save_args(__file__, args)
 
 def train(epoch):
 
-    rnet.train()
+    net.train()
     matches, losses = [], []
     for batch_idx, (inputs, targets) in tqdm.tqdm(enumerate(trainloader), total=len(trainloader)):
 
@@ -45,7 +45,7 @@ def train(epoch):
 
         v_inputs = Variable(inputs.data, volatile=True)
 
-        preds = rnet.forward(v_inputs)
+        preds = net.forward(v_inputs)
 
         _, pred_idx = preds.max(1)
         match = (pred_idx==targets).data
@@ -69,7 +69,7 @@ def train(epoch):
 
 def test(epoch):
 
-    rnet.eval()
+    net.eval()
     matches = []
     for batch_idx, (inputs, targets) in tqdm.tqdm(enumerate(testloader), total=len(testloader)):
 
@@ -79,7 +79,7 @@ def test(epoch):
 
         v_inputs = Variable(inputs.data, volatile=True)
 
-        preds = rnet.forward(v_inputs)
+        preds = net.forward(v_inputs)
 
         _, pred_idx = preds.max(1)
         match = (pred_idx==targets).data
@@ -93,10 +93,10 @@ def test(epoch):
     log_value('train_accuracy', accuracy, epoch)
 
     # save the model parameters
-    rnet_state_dict = rnet.module.state_dict() if args.parallel else rnet.state_dict()
+    net_state_dict = net.module.state_dict() if args.parallel else net.state_dict()
 
     state = {
-      'state_dict': rnet_state_dict,
+      'state_dict': net_state_dict,
       'epoch': epoch,
       'acc': accuracy
     }
@@ -106,15 +106,17 @@ def test(epoch):
 trainset, testset = utils.get_dataset(args.train_csv, args.val_csv)
 trainloader = torchdata.DataLoader(trainset, batch_size=args.batch_size, shuffle=True, num_workers=16)
 testloader = torchdata.DataLoader(testset, batch_size=args.batch_size, shuffle=False, num_workers=4)
-rnet = utils.get_model()
-rnet.cuda()
+net = utils.get_model()
+if args.parallel:
+    net = nn.DataParallel(net)
+net.cuda()
 
 if args.load:
     checkpoint = torch.load(args.load)
     torch.load_state_dict(checkpoint)
 
 start_epoch = 0
-optimizer = optim.Adam(rnet.parameters(), lr=args.lr)
+optimizer = optim.Adam(net.parameters(), lr=args.lr)
 configure(args.cv_dir+'/log', flush_secs=5)
 for epoch in range(start_epoch, start_epoch+args.max_epochs+1):
     train(epoch)
