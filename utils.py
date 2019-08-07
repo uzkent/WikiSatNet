@@ -5,7 +5,7 @@ import torchvision.transforms as transforms
 import torchvision.datasets as torchdata
 import torchvision.models as torchmodels
 import numpy as np
-from data_loader import CustomDatasetFromImages
+from data_loader import WikiSatNet, fMoW
 import pdb
 import shutil
 
@@ -33,10 +33,14 @@ def get_transforms():
     return transform_train, transform_test
 
 # Pick from the datasets available and the hundreds of models we have lying around depending on the requirements.
-def get_dataset(train_csv, val_csv):
+def get_dataset(train_csv, val_csv, pretrain=False):
     transform_train, transform_test = get_transforms()
-    trainset = CustomDatasetFromImages(train_csv, transform_train)
-    testset = CustomDatasetFromImages(val_csv, transform_test)
+    if pretrain:
+        trainset = WikiSatNet(train_csv, transform_train)
+        testset = WikiSatNet(val_csv, transform_test)
+    else:
+        trainset = fMoW(train_csv, transform_train)
+        testset = fMoW(val_csv, transform_test)
 
     return trainset, testset
 

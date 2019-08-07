@@ -34,7 +34,7 @@ utils.save_args(__file__, args)
 
 def train(epoch, counter):
 
-    net.train()
+    rnet.train()
     losses = []
     for batch_idx, (inputs, targets) in tqdm.tqdm(enumerate(trainloader), total=len(trainloader)):
 
@@ -44,7 +44,7 @@ def train(epoch, counter):
 
         v_inputs = Variable(inputs.data, volatile=True)
 
-        preds = net.forward(v_inputs)
+        preds = rnet.forward(v_inputs)
 
         loss = criterion(preds, targets, torch.ones((inputs.size(0))).cuda())
         if batch_idx % 50 == 0:
@@ -65,7 +65,7 @@ def train(epoch, counter):
 
 def test(epoch):
 
-    net.eval()
+    rnet.eval()
     losses = []
     for batch_idx, (inputs, targets) in tqdm.tqdm(enumerate(testloader), total=len(testloader)):
 
@@ -75,7 +75,7 @@ def test(epoch):
 
         v_inputs = Variable(inputs.data, volatile=True)
 
-        preds = net.forward(v_inputs)
+        preds = rnet.forward(v_inputs)
 
         loss = criterion(preds, targets, torch.ones((inputs.size(0))).cuda())
 
@@ -88,26 +88,26 @@ def test(epoch):
     log_value('test_loss', loss, epoch)
 
     # save the model parameters
-    net_state_dict = net.module.state_dict() if args.parallel else net.state_dict()
+    rnet_state_dict = rnet.module.state_dict() if args.parallel else rnet.state_dict()
 
     state = {
-      'state_dict': net_state_dict,
+      'state_dict': rnet_state_dict,
       'epoch': epoch,
     }
     torch.save(state, args.cv_dir+'/ckpt_E_%d'%(epoch))
 #--------------------------------------------------------------------------------------------------------#
-trainset, testset = utils.get_dataset(args.train_csv, args.val_csv)
+trainset, testset = utils.get_dataset(args.train_csv, args.val_csv, pretrain=True)
 trainloader = torchdata.DataLoader(trainset, batch_size=args.batch_size, shuffle=True, num_workers=16)
 testloader = torchdata.DataLoader(testset, batch_size=args.batch_size, shuffle=False, num_workers=4)
-net = utils.get_model()
+rnet = utils.get_model()
 if args.parallel:
-    net = nn.DataParallel(net)
-net.cuda()
+    rnet = nn.DataParallel(rnet)
+rnet.cuda()
 
 start_epoch = 0
 counter = 0
 criterion = nn.CosineEmbeddingLoss()
-optimizer = optim.Adam(net.parameters(), lr=args.lr)
+optimizer = optim.Adam(rnet.parameters(), lr=args.lr)
 configure(args.cv_dir+'/log', flush_secs=5)
 for epoch in range(start_epoch, start_epoch+args.max_epochs+1):
     train(epoch, counter)

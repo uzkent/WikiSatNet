@@ -25,6 +25,7 @@ parser.add_argument('--val_csv', default='cv/tmp/', help='validation csv directo
 parser.add_argument('--batch_size', type=int, default=256, help='batch size')
 parser.add_argument('--epoch_step', type=int, default=10000, help='epochs after which lr is decayed')
 parser.add_argument('--max_epochs', type=int, default=10000, help='total epochs to run')
+parser.add_argument('--load', help='Checkpoints for the pretrained model')
 parser.add_argument('--parallel', action ='store_true', default=False, help='use multiple GPUs for training')
 
 args = parser.parse_args()
