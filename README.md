@@ -27,7 +27,7 @@ If we initialize the weights by pre-training on ImageNet, the training step take
 At the end of training for 2 epochs, we can see the cosine loss going down from ~1 to ~0.35. We save the checkpoints and perform transfer learning experiments.
 
 ## Download DenseNet121 Model Pre-trained on WikiSatNet
-You can download our model pre-trained on WikiSatNet [here](https://drive.google.com/open?id=1Q69nGbhXFYoeJlgge-UPTZRVP0oL7Uy8). You can use this model for the downstream tasks that involves analyzing satellite images. It should provide significant boost especially with the small size dataset in the target task. For more details, you can check our paper. Soon, we will share the model trained in PyTorch with the code in this repository.
+You can download our __KERAS__ model pre-trained on **WikiSatNet** [here](https://drive.google.com/open?id=1Q69nGbhXFYoeJlgge-UPTZRVP0oL7Uy8). You can use this model for the downstream tasks that involves analyzing satellite images. It should provide significant boost especially with the small size dataset in the target task. For more details, you can check our paper. Soon, we will share the model trained in PyTorch with the code in this repository.
 
 ## Transfer Learning on the functional Map of the World (fMoW) Dataset
 As a downstream task, we use the [fMoW](https://github.com/fMoW/dataset) dataset. It includes about **350k** training images, together with **50k** validation and test images. We pre-process the articles using the guidelines in the repository of the dataset. Similarly to the pre-training step, we form a csv file in the following format:
