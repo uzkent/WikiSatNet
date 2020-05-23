@@ -10,7 +10,6 @@ import numpy as np
 import tqdm
 import utils
 import torch.optim as optim
-import pdb
 import torch.backends.cudnn as cudnn
 cudnn.benchmark = True
 
@@ -19,6 +18,7 @@ parser = argparse.ArgumentParser(description='Wikipedia_Pretraining')
 parser.add_argument('--lr', type=float, default=1e-4, help='learning rate')
 parser.add_argument('--wd', type=float, default=0.0, help='weight decay')
 parser.add_argument('--data_dir', default='data/', help='data directory')
+parser.add_argument('--test_interval', type=int, default=5, help='How often to test the model in terms of epochs')
 parser.add_argument('--cv_dir', default='cv/tmp/', help='checkpoint directory (models and logs are saved here)')
 parser.add_argument('--train_csv', default='cv/tmp/', help='train csv directory')
 parser.add_argument('--val_csv', default='cv/tmp/', help='validation csv directory')
@@ -111,6 +111,5 @@ optimizer = optim.Adam(rnet.parameters(), lr=args.lr)
 configure(args.cv_dir+'/log', flush_secs=5)
 for epoch in range(start_epoch, start_epoch+args.max_epochs+1):
     train(epoch, counter)
-    if epoch % 1 == 0:
+    if epoch % args.test_interval == 0:
         test(epoch)
-    lr_scheduler.step()
