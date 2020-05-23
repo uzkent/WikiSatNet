@@ -1,4 +1,7 @@
 # Learning to Interpret Satellite Images Using Wikipedia
+
+[figure](./figures/diagram.png)
+
 This repository contains the implementation of our IJCAI 2019 paper __Learning to Interpret Satellite Images Using Wikipedia__. This work performs large scale pre-training on satellite images using weak supervision from the geolocated Wikipedia articles. The proposed concept can reduce the sample complexity and uncertainty in downstream tasks involving satellite images as well as improve the accuracy.
 
 **arxiv** https://arxiv.org/pdf/1905.02506.pdf
@@ -13,7 +16,7 @@ This repository contains the implementation of our IJCAI 2019 paper __Learning t
 ```
 
 ## Process the Geolocated Articles using Doc2Vec
-**You can find how to process geolocated articles using Doc2Vec in this repository** https://github.com/ermongroup/WikipediaPovertyMapping 
+**You can find how to process geolocated articles using Doc2Vec in this repository** https://github.com/ermongroup/WikipediaPovertyMapping
 
 For each wikipedia article, we learn a __300-D__ textual embedding and save them in a numpy array file. This file can be treated as the *rich summary* of corresponding __satellite image__. We then train the CNN to learn this summaries to learn robust, satellite-specific features that can be highly useful for transfer learning involving satellite images.
 
