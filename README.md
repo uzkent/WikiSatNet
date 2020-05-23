@@ -1,13 +1,20 @@
 # Learning to Interpret Satellite Images Using Wikipedia
-This repository contains the implementation of our IJCAI 2019 paper __Learning to Interpret Satellite Images Using Wikipedia__. [arxiv](https://arxiv.org/pdf/1905.02506.pdf)
+This repository contains the implementation of our IJCAI 2019 paper __Learning to Interpret Satellite Images Using Wikipedia__. This work performs large scale pre-training on satellite images using weak supervision from the geolocated Wikipedia articles. The proposed concept can reduce the sample complexity and uncertainty in downstream tasks involving satellite images as well as improve the accuracy.
 
-Unfortunately, as of now, we are still negotiating with DigitalGlobe to purchase the images for WikiSatNet. However, we plan on releasing the model pre-trained on WikiSatNet that boosts the accuracy on the dowstream tasks. Additionally, we are working on learning visual features with no labels using publicly-available Sentinel-2 images. More updates on this will be posted soon.
+[arxiv](https://arxiv.org/pdf/1905.02506.pdf)
+[IJCAI2019](https://www.ijcai.org/Proceedings/2019/0502.pdf)
+
+-------------------------------------------------------------------------------------
+## Requirements
+*Prerequisites*: Please install the dependencies in the environment.yml file as:
+```shell
+  conda env create -f environment.yml
+```
 
 ## Process the Geolocated Articles using Doc2Vec
-You can find how to process geolocated articles using Doc2Vec in this [repository](https://github.com/ermongroup/WikipediaPovertyMapping).
+*You can find how to process geolocated articles using Doc2Vec in this [repository]*(https://github.com/ermongroup/WikipediaPovertyMapping).
 
-For each wikipedia article, we learn a __300-D__ textual embedding and save them in a file. We believe that this __300-D__ embedding is a *rich summary* of the corresponding __satellite image__. We then train the CNN to learn this summaries to learn robust, domain-specific features that can be highly useful
-for transfer learning.
+For each wikipedia article, we learn a __300-D__ textual embedding and save them in a numpy array file. This file can be treated as the *rich summary* of corresponding __satellite image__. We then train the CNN to learn this summaries to learn robust, satellite-specific features that can be highly useful for transfer learning involving satellite images.
 
 ## Creating the CSV file
 After processing articles using Doc2Vec, we form a csv file for both **training** and **validation** steps. The csv files are formatted as below.
@@ -24,13 +31,13 @@ To train the CNN, we should use the following command:
 ```
 If we initialize the weights by pre-training on ImageNet, the training step takes only 2 epochs. However, initializing weights **randomly** increases the number of epochs to 15. Our current code uses the model pre-trained on **ImageNet**.
 
-At the end of training for 2 epochs, we can see the cosine loss going down from ~1 to ~0.35. We save the checkpoints and perform transfer learning experiments.
+At the end of training for 2 epochs, we can see the cosine loss going down from *~1 to ~0.35*. We save the checkpoints and perform transfer learning experiments.
 
 ## Download DenseNet121 Model Pre-trained on WikiSatNet
-You can download our __KERAS__ model pre-trained on **WikiSatNet** [here](https://drive.google.com/open?id=1Q69nGbhXFYoeJlgge-UPTZRVP0oL7Uy8). You can use this model for the downstream tasks that involves analyzing satellite images. It should provide significant boost especially with the small size dataset in the target task. For more details, you can check our paper. Soon, we will share the model trained in PyTorch with the code in this repository.
+You can download our __KERAS__ model pre-trained on **WikiSatNet** [here](https://drive.google.com/open?id=1Q69nGbhXFYoeJlgge-UPTZRVP0oL7Uy8). You can use this model for the downstream tasks that involves analyzing satellite images. It should provide significant boost especially with the small size datasets in the target task. For more details, you can check our paper. Soon, we will share the model trained in PyTorch with the code in this repository.
 
 ## Transfer Learning on the functional Map of the World (fMoW) Dataset
-As a downstream task, we use the [fMoW](https://github.com/fMoW/dataset) dataset. It includes about **350k** training images, together with **50k** validation and test images. We pre-process the articles using the guidelines in the repository of the dataset. Similarly to the pre-training step, we form a csv file in the following format:
+As a downstream task, we use the [fMoW](https://github.com/fMoW/dataset) dataset. It includes about **350k** training images, together with **50k** validation and test images. We pre-process the articles using the guidelines provided in the repository of the dataset. Similarly to the pre-training step, we form a csv file in the following format:
 ```
     Class Label, Image Location
 ```
@@ -52,4 +59,3 @@ To cite our paper:
   year={2019}
 }
 ```
-More details to be posted soon.
