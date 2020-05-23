@@ -41,8 +41,9 @@ You can use this model for the downstream tasks that involves analyzing satellit
 
 ## Transfer Learning on the functional Map of the World (fMoW) Dataset
 **fMoW Dataset** https://github.com/fMoW/dataset
+
 As a downstream task, we use the fMoW dataset consisting of high resolution satellite images similar to our pre-training dataset. It includes about **350k** training images, together with **50k** validation and test images. We pre-process the articles using the guidelines provided in the repository of the dataset. Similarly to the pre-training step, we form a csv file in the following format:
-```
+```shell
     Class Label, Image Location
 ```
 Once we created the csv file for training and validation steps, we save it into the *data* directory.
@@ -50,7 +51,7 @@ Once we created the csv file for training and validation steps, we save it into 
 Using **DenseNet161** model pre-trained on **ImageNet** we achieve **68.7** classification accuracy on the *temporal views*. On the other hand, we achieve **73.1** classification accuracy by using the model pre-trained on **WikiSatNet** with image to text matching. More importantly, when the number of training samples on the target task is reduced to **10k** labels, the model pre-trained on WikiSatNet outperforms ImageNet pre-training by **10%**.
 
 To perform transfer learning on the fMoW dataset, you can use the following commands:
-```
+```shell
   python transfer_learning.py --lr 1e-4 --cv_dir {path} --batch_size 128 --load {path_to_checkpoints} --train_csv {path} --val_csv {path}
 ```
 
