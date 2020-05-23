@@ -1,6 +1,5 @@
 # Learning to Interpret Satellite Images Using Wikipedia
-
-[figure](./figures/diagram.png)
+![figure](./figures/diagram.png)
 
 This repository contains the implementation of our IJCAI 2019 paper __Learning to Interpret Satellite Images Using Wikipedia__. This work performs large scale pre-training on satellite images using weak supervision from the geolocated Wikipedia articles. The proposed concept can reduce the sample complexity and uncertainty in downstream tasks involving satellite images as well as improve the accuracy.
 
